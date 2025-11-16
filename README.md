@@ -20,4 +20,4 @@ Bu proje, Spotify’da çalan şarkıları gerçek zamanlı olarak takip eden ve
 ## 📄 Durum
 Proje hâlihazırda geliştirme aşamasında olup stabilite iyileştirmeleri üzerinde çalışılmaktadır.
 
-**Özet:** Spotify entegrasyonu + web otomasyonu + İngilizce’den Türkçe’ye offline çeviri üzerine canlı gelişen teknik bir demo. 🚀
+**Özet:** Spotify entegrasyonu + web otomasyonu + İngilizce’den Türkçe’ye offline/local çeviri üzerine canlı gelişen teknik bir demo. 🚀
