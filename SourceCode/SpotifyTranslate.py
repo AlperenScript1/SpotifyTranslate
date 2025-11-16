@@ -34,8 +34,8 @@ driver.get(url)
 #? Spotify API  "client_id" & "client_secret"
 spotify = spotipy.Spotify(
     auth_manager=SpotifyOAuth( #! Tokenler kontrol edilecek [SSL error code] (handshake failed; returned -1, SSL error code 1, net_error -101)
-        client_id="id", #! "SpotifyOAuth" senkronize ediyor. 
-        client_secret="secret", #! "SpotifyOAuth" senkronize ediyor.
+        client_id="Userid", 
+        client_secret="Usersecret",
         redirect_uri="http://127.0.0.1:8000/callback",
         scope="user-read-playback-state"
     )
@@ -87,4 +87,5 @@ track_Label1.pack(pady=20)
 
 #? threading olayı UI ve backend ayrı çalışması için.
 threading.Thread(target=poller, daemon=True).start()
+
 root.mainloop()
