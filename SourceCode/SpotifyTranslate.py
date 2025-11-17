@@ -35,14 +35,16 @@ driver.get(url)
 #? Spotify API  "client_id" & "client_secret"
 spotify = spotipy.Spotify(
     auth_manager=SpotifyOAuth( #! Tokenler kontrol edilecek [SSL error code] (handshake failed; returned -1, SSL error code 1, net_error -101)
-        client_id="yourID",  
-        client_secret="yourSecret", 
+        client_id="", #TODO: YourID
+        client_secret="", #TODO: YourSecret
         redirect_uri="http://127.0.0.1:8000/callback",
         scope="user-read-playback-state"
     )
 )
 
+
 def poller():
+    lyrics_text1.config(state="disabled") #! noWrite
     while True:
         try:
             current = spotify.current_playback()
@@ -54,13 +56,13 @@ def poller():
                 print(artist +" "+ lastTrack) 
                 if artist and lastTrack != None:
                         print("===========================================================")
-                        sleep(1)
                         driver.get("https://www.azlyrics.com/lyrics/" + clean(artist) + "/" +clean(lastTrack) + ".html" ) #! https://www.azlyrics.com/lyrics/cigarettesaftersex/silversable.html
-                        sleep(2)
                         driver.execute_script("window.scrollBy(0, 1200)") #! 1200 pixel downPage
                         sleep(5) #! yüklendiği zaman kullanılacak
                         lyrics = driver.find_element(By.XPATH,"//body/div[@class='container main-page']/div[@class='row']/div[@class='col-xs-12 col-lg-8 text-center']/div[5]").text #! lyrics
-                        lyrics_Label1.config(text = str(lyrics))  
+                        lyrics_text1.config(state="normal") #! Write
+                        lyrics_text1.insert("1.0", lyrics)  #! Lyrics to text 
+                        lyrics_text1.config(state="disabled") #! noWrite
                         print(lyrics);
                         if(lyrics != None):
                             print("Şarkı sözleri alındı !");
@@ -73,27 +75,33 @@ def poller():
         except Exception as e:
             error_Label1.config(text=f"Hata: {e}")
         
-        sleep(1) #! 10
+        sleep(10) #! 10
             
 #! UI
 root = tk.Tk()
-root.title("Spotify Takip") 
-root.geometry("600x500")
+root.title("SpotifyTranslate") 
+root.geometry("650x550")
 root.configure(bg="black")
 
-error_Label1 = tk.Label(root, text="Console", font=("Arial", 15), fg="red")
+error_Label1 = tk.Label(root, text="Terminal Exception {E}", font=("Arial", 15), fg="red")
 error_Label1.pack(pady=20)
 
-track_Label1 = tk.Label(root, text="Bekleniyor...", font=("Arial", 15))
+track_Label1 = tk.Label(root, text="Bekleniyor... {Track}", font=("Arial", 15))
 track_Label1.pack(pady=20)
 
-lyrics_Label1 = tk.Label(root, text="Sözler alınıyor..", font=("Arial", 15))
+lyrics_Label1 = tk.Label(root, text="Sözler alınıyor.. {Lyrics}", font=("Arial", 15))
 lyrics_Label1.pack(pady=20)
 
+#? text
+lyrics_text1 = tk.Text(root, wrap="word", bg="black", fg="white")
+lyrics_text1.pack(side="left", fill="both", expand=True)
 
+#? scrollbar
+lyrics_scrollbar1 = tk.Scrollbar(root, command=lyrics_text1.yview)
+lyrics_scrollbar1.pack(side="right", fill="y")
+#? lyrics_text1 → scrollbar bağlantısı
+lyrics_text1.config(yscrollcommand=lyrics_scrollbar1.set) #! state="disabled" (Değişken değerini atamıyorum) 
 
-
-#? threading olayı UI ve backend ayrı çalışması için.
+#? "threading" olayı UI ve backend ayrı çalışması için.
 threading.Thread(target=poller, daemon=True).start()
 root.mainloop();
-
