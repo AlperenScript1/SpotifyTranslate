@@ -23,10 +23,11 @@ def clean(text):
 options.add_argument("--window-size=1920,800") #? Sayfa görünür olmasa bile çözünürlüğü ayarlar.
 
 #! Selenium
-options.add_argument("--disable-blink-features=AutomationControlled")
+#! Sonradan eklendi SSL için 
+options.add_argument("--disable-blink-features=AutomationControlled --allow-insecure-localhost --ignore-certificate-errors")
 options.add_experimental_option("excludeSwitches", ["enable-automation"])
 options.add_experimental_option("useAutomationExtension", False)
-#options.add_argument("--headless") 
+options.add_argument("--headless") 
 driver = webdriver.Chrome(options=options); 
 url = "https://azlyrics.com" #! Sözlerin sağlandığı platform azlyrics
 driver.get(url)
@@ -34,8 +35,8 @@ driver.get(url)
 #? Spotify API  "client_id" & "client_secret"
 spotify = spotipy.Spotify(
     auth_manager=SpotifyOAuth( #! Tokenler kontrol edilecek [SSL error code] (handshake failed; returned -1, SSL error code 1, net_error -101)
-        client_id="Userid", 
-        client_secret="Usersecret",
+        client_id="5d9b8645384941bb872cdc7cd4cc40a4", #! "SpotifyOAuth" senkronize ediyor. 
+        client_secret="017f56dba2444610b24af44b430c54a3", #! "SpotifyOAuth" senkronize ediyor.
         redirect_uri="http://127.0.0.1:8000/callback",
         scope="user-read-playback-state"
     )
@@ -59,6 +60,7 @@ def poller():
                         driver.execute_script("window.scrollBy(0, 1200)") #! 1200 pixel downPage
                         sleep(5) #! yüklendiği zaman kullanılacak
                         lyrics = driver.find_element(By.XPATH,"//body/div[@class='container main-page']/div[@class='row']/div[@class='col-xs-12 col-lg-8 text-center']/div[5]").text #! lyrics
+                        lyrics_Label1.config(text = str(lyrics))  
                         print(lyrics);
                         if(lyrics != None):
                             print("Şarkı sözleri alındı !");
@@ -71,7 +73,7 @@ def poller():
         except Exception as e:
             error_Label1.config(text=f"Hata: {e}")
         
-        sleep(2)
+        sleep(1) #! 10
             
 #! UI
 root = tk.Tk()
@@ -85,7 +87,12 @@ error_Label1.pack(pady=20)
 track_Label1 = tk.Label(root, text="Bekleniyor...", font=("Arial", 15))
 track_Label1.pack(pady=20)
 
+lyrics_Label1 = tk.Label(root, text="Sözler alınıyor..", font=("Arial", 15))
+lyrics_Label1.pack(pady=20)
+
+
+
+
 #? threading olayı UI ve backend ayrı çalışması için.
 threading.Thread(target=poller, daemon=True).start()
-
-root.mainloop()
+root.mainloop();
