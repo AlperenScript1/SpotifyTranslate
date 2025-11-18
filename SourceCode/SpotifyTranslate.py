@@ -35,8 +35,8 @@ driver.get(url)
 #? Spotify API  "client_id" & "client_secret"
 spotify = spotipy.Spotify(
     auth_manager=SpotifyOAuth( #! Tokenler kontrol edilecek [SSL error code] (handshake failed; returned -1, SSL error code 1, net_error -101)
-        client_id="", #TODO: YourID
-        client_secret="", #TODO: YourSecret
+        client_id="5d9b8645384941bb872cdc7cd4cc40a4", #TODO: YourID
+        client_secret="017f56dba2444610b24af44b430c54a3", #TODO: YourSecret
         redirect_uri="http://127.0.0.1:8000/callback",
         scope="user-read-playback-state"
     )
@@ -56,10 +56,13 @@ def poller():
                 print(artist +" "+ lastTrack) 
                 if artist and lastTrack != None:
                         print("===========================================================")
+                        lyrics_Label1.config(text="Şarkı sözleri alınıyor..");
                         driver.get("https://www.azlyrics.com/lyrics/" + clean(artist) + "/" +clean(lastTrack) + ".html" ) #! https://www.azlyrics.com/lyrics/cigarettesaftersex/silversable.html
                         driver.execute_script("window.scrollBy(0, 1200)") #! 1200 pixel downPage
-                        sleep(5) #! yüklendiği zaman kullanılacak
+                        sleep(5) #TODO: element yüklendiği zaman kullanılacak
                         lyrics = driver.find_element(By.XPATH,"//body/div[@class='container main-page']/div[@class='row']/div[@class='col-xs-12 col-lg-8 text-center']/div[5]").text #! lyrics
+                        lyrics_Label1.config(bg="green")
+                        lyrics_Label1.config(text="Şarkı sözleri alındı :)");
                         lyrics_text1.config(state="normal") #! Write
                         lyrics_text1.insert("1.0", lyrics)  #! Lyrics to text 
                         lyrics_text1.config(state="disabled") #! noWrite
@@ -73,8 +76,9 @@ def poller():
             else:
                 track_Label1.config(text="Çalmıyor")
         except Exception as e:
-            error_Label1.config(text=f"Hata: {e}")
-        
+               lyrics_Label1.config(bg="red")
+               lyrics_Label1.config(text="Şarkı sözleri alınamadı :(");  #!error_Label1.config(text=f"Hata: {e}")
+               #TODO: if sorgusu gelicek 
         sleep(10) #! 10
             
 #! UI
@@ -89,7 +93,7 @@ error_Label1.pack(pady=20)
 track_Label1 = tk.Label(root, text="Bekleniyor... {Track}", font=("Arial", 15))
 track_Label1.pack(pady=20)
 
-lyrics_Label1 = tk.Label(root, text="Sözler alınıyor.. {Lyrics}", font=("Arial", 15))
+lyrics_Label1 = tk.Label(root, text="none {Lyrics}", font=("Arial", 15))
 lyrics_Label1.pack(pady=20)
 
 #? text
