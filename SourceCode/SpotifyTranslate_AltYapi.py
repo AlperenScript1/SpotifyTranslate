@@ -73,13 +73,18 @@ def checkApi():
                         foundTrack = driver.find_element(By.CLASS_NAME,"eac-item");
                         print("foundTrack bulundu ")                                               
                         foundTrack.click() #TODO: Buluyor
-                        
+                        lyrics = driver.find_element(By.XPATH,"//body/div[@class='container main-page']/div[@class='row']/div[@class='col-xs-12 col-lg-8 text-center']/div[5]").text #! lyrics
+                        print(str(lyrics)) #TODO: Sözler alınıyor ama daha optimize olması için 'toast_locator' kullanılacak. 
                         #TODO: azlyrics "remaster" geçen şarkıları bulmuyor.
-                        #TODO: Çözüm:track filtreleme varsa remastered silme gibi işlemler.  
-                        
+                        #TODO: Çözüm:track filtreleme varsa remastered silme gibi işlemler.
+                        #TODO:Sözler yazdırılıyor kullanıcı değiştiremiyor 
+                        lyrics_text1.config(state="normal") #! Write 
+                        lyrics_text1.insert("1.0", lyrics)  #! Lyrics to text  
+                        lyrics_text1.config(state="disabled") #! noWrite
 
 
-                        #lyrics = driver.find_element(By.XPATH,"//body/div[@class='container main-page']/div[@class='row']/div[@class='col-xs-12 col-lg-8 text-center']/div[5]").text #! lyrics
+                        #! buraya kadar sorunsuz  Spotify API  '-1, SSL error code 1, net_error -100' hatası araştırlacak
+
                         # print(lyrics + " ???????????????????????????????????????????????");
                         # if lyrics != None:
                         #     lyrics_Label1.config(bg="green");
@@ -87,10 +92,6 @@ def checkApi():
                         # else:
                         #     lyrics_Label1.config(bg="yellow");
                         #     lyrics_Label1.config(text="Alınamadı Selenium farklı şekilde tekrardan deniyor...");
-                       
-                        # lyrics_text1.config(state="normal") #! Write 
-                        # lyrics_text1.insert("1.0", lyrics)  #! Lyrics to text 
-                        # lyrics_text1.config(state="disabled") #! noWrite
                         # print(lyrics);
                     
                         # if( != None):
@@ -104,8 +105,7 @@ def checkApi():
         except Exception as e:
                lyrics_Label1.config(bg="red")
                lyrics_Label1.config(text="Şarkı sözleri alınamadı :(");  #!error_Label1.config(text=f"Hata: {e}")
-                    
-        
+
                #TODO: if sorgusu gelicek 
         sleep(5) #! 10
             
