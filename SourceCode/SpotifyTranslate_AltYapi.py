@@ -50,63 +50,56 @@ spotify = spotipy.Spotify(
 def checkApi():
     lyrics_text1.config(state="disabled") #! noWrite
     lyrics_Label1.config(bg="white")
+    # keep track of the last searched track so we don't repeat searches
+    lastTrack = None
     while True:
         try:
             current = spotify.current_playback()
-            if current and current["is_playing"]:
+            if current and current.get("is_playing"):
                 firstTrack = current["item"]["name"]
-                lastTrack = firstTrack
                 artist = current["item"]["artists"][0]["name"]
-                track_Label1.config(text=f"{artist} - {lastTrack}")
-                print(artist +" "+ lastTrack) 
-                if artist and lastTrack != None:
+                track_Label1.config(text=f"{artist} - {firstTrack}")
+                print(artist + " " + firstTrack)
+
+                # only proceed if we have both artist and track
+                if artist is not None and firstTrack is not None:
+                    # if it's the same as the last searched track, skip
+                    if lastTrack == firstTrack:
+                        print("Aynı şarkı tekrar bulundu; arama atlandı.")
+                    else:
+                        lastTrack = firstTrack
                         print("==========================--=================================")
-                        lyrics_Label1.config(text="Şarkı sözleri alınıyor.."); #unidecode(text)
-                        #TODO: azlyrics search 
-                        searchEntry = driver.find_element(By.CLASS_NAME,"form-control")
-                        print("Selenium:"+"search Class buldundu") 
-                        print(str(artist)  + " " + str(lastTrack))
-                        searchEntry.send_keys(str(artist)  + " "+ str(lastTrack))
-                        sleep(2)   
-                        searchButton = driver.find_element(By.CSS_SELECTOR,"form[class='search'] button[type='submit']")
+                        lyrics_Label1.config(text="Şarkı sözleri alınıyor..")
+                        # azlyrics search
+                        searchEntry = driver.find_element(By.CLASS_NAME, "form-control")
+                        print("Selenium: search Class bulundu")
+                        print(str(artist) + " " + str(lastTrack))
+                        try:
+                            searchEntry.clear()
+                        except Exception:
+                            pass
+                        searchEntry.send_keys(str(artist) + " " + str(lastTrack))
                         sleep(2)
-                        foundTrack = driver.find_element(By.CLASS_NAME,"eac-item");
-                        print("foundTrack bulundu ")                                               
-                        foundTrack.click() #TODO: Buluyor
-                        lyrics = driver.find_element(By.XPATH,"//body/div[@class='container main-page']/div[@class='row']/div[@class='col-xs-12 col-lg-8 text-center']/div[5]").text #! lyrics
-                        print(str(lyrics)) #TODO: Sözler alınıyor ama daha optimize olması için 'toast_locator' kullanılacak. 
-                        #TODO: azlyrics "remaster" geçen şarkıları bulmuyor.
-                        #TODO: Çözüm:track filtreleme varsa remastered silme gibi işlemler.
-                        #TODO:Sözler yazdırılıyor kullanıcı değiştiremiyor 
-                        lyrics_text1.config(state="normal") #! Write 
-                        lyrics_text1.insert("1.0", lyrics)  #! Lyrics to text  
-                        lyrics_text1.config(state="disabled") #! noWrite
-
-
-                        #! buraya kadar sorunsuz  Spotify API  '-1, SSL error code 1, net_error -100' hatası araştırlacak
-
-                        # print(lyrics + " ???????????????????????????????????????????????");
-                        # if lyrics != None:
-                        #     lyrics_Label1.config(bg="green");
-                        #     lyrics_Label1.config(text="Şarkı sözleri alındı :)");
-                        # else:
-                        #     lyrics_Label1.config(bg="yellow");
-                        #     lyrics_Label1.config(text="Alınamadı Selenium farklı şekilde tekrardan deniyor...");
-                        # print(lyrics);
-                    
-                        # if( != None):
-                        #     print("Şarkı sözleri alındı !");
-                        # else:
-                        #     print("Şarkı sözleri alınamadı..");
+                        searchButton = driver.find_element(By.CSS_SELECTOR, "form[class='search'] button[type='submit']")
+                        sleep(2)
+                        foundTrack = driver.find_element(By.CLASS_NAME, "eac-item")
+                        print("foundTrack bulundu")
+                        foundTrack.click()
+                        lyrics = driver.find_element(By.XPATH, "//body/div[@class='container main-page']/div[@class='row']/div[@class='col-xs-12 col-lg-8 text-center']/div[5]").text
+                        print(str(lyrics))
+                        lyrics_text1.config(state="normal")
+                        lyrics_text1.delete("1.0", "end")
+                        lyrics_text1.insert("1.0", lyrics)
+                        lyrics_text1.config(state="disabled")
                 else:
-                    print("Spotify bağlantısı kurulamadı..");
+                    print("Spotify bağlantısı kurulamadı..")
             else:
                 track_Label1.config(text="Çalmıyor")
         except Exception as e:
                lyrics_Label1.config(bg="red")
-               lyrics_Label1.config(text="Şarkı sözleri alınamadı :(");  #!error_Label1.config(text=f"Hata: {e}")
+               lyrics_Label1.config(text="Şarkı sözleri alınamadı :(")
+               print("checkApi hata:", e)
 
-               #TODO: if sorgusu gelicek 
         sleep(5) #! 10
             
 #! UI
