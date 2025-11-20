@@ -7,6 +7,7 @@ from unidecode import unidecode #? Karakterleri TR'den en çevirmeye yarayan kü
 from selenium import webdriver  
 from time import sleep, time
 import tkinter as tk
+import webbrowser
 import threading
 import spotipy
 import random
@@ -61,7 +62,7 @@ def checkApi():
                 print(artist + " " + firstTrack)
 
                 
-                if artist and firstTrack != None: #! Kullanıcı şarkıyı başlatmamış olabilir.              #artist is not None and firstTrack is not None 
+                if artist and firstTrack != None: #! Kullanıcı şarkıyı başlatmamış olabilir.               
                     if lastTrack == firstTrack: #? İsim Aynı ise atlanıyor
                         print("Aynı şarkı tekrar bulundu; arama atlandı.")
                     else:
@@ -93,6 +94,7 @@ def checkApi():
 
                         print("En: " + str(lyrics)) #? en
                         lyricsMakeTranslate = lyrics
+                        lyrics_Label1.config(text="Şarkı sözleri çeviriliyor..")
                         lyricsTranslate = argostranslate.translate.translate(lyricsMakeTranslate, "en", "tr")
                         print("Tr: " + str(lyricsTranslate)) #? tr 
                         
@@ -119,7 +121,7 @@ def checkApi():
 #! UI
 root = tk.Tk()
 root.title("SpotifyTranslate")
-root.geometry("650x600")
+root.geometry("750x600")
 root.configure(bg="black")
 
 top_frame = tk.Frame(root, bg="black")
@@ -134,7 +136,6 @@ track_Label1.pack(pady=5)
 lyrics_Label1 = tk.Label(top_frame, text="none {Lyrics}", font=("Arial", 15), bg="black", fg="white")
 lyrics_Label1.pack(pady=(5, 10))
 
-# Content frame for text area and scrollbar
 content_frame = tk.Frame(root)
 content_frame.pack(side="top", fill="both", expand=True)
 
@@ -144,6 +145,14 @@ lyrics_text1.pack(side="left", fill="both", expand=True)
 lyrics_scrollbar1 = tk.Scrollbar(content_frame, command=lyrics_text1.yview)
 lyrics_scrollbar1.pack(side="right", fill="y")
 lyrics_text1.config(yscrollcommand=lyrics_scrollbar1.set)
+
+byDev = tk.Label(root, text="//Alperen (GitHub)", fg="#006385", bg="black", cursor="hand2", font=("Helvetica", 15))
+byDev.pack(side="bottom", pady=1)
+
+def _open_github(event=None):
+    webbrowser.open_new_tab("https://github.com/AlperenScript1")
+byDev.bind("<Button-1>", _open_github)
+
 
 threading.Thread(target=checkApi, daemon=True).start()
 root.mainloop()
