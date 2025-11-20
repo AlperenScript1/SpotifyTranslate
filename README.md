@@ -4,6 +4,9 @@ Bu proje, Spotify’da çalan şarkıları gerçek zamanlı olarak takip eden ve
 
 🌐 Spotify API ile anlık parça bilgileri alınır ve Selenium ile tarayıcı üzerinden lyrics sayfasına erişim sağlanır. Ardından sözler **argos-translate** kütüphanesi ile tamamen lokal olarak çevrilir. 🌐  
 
+##⚠️ UYARI ⚠️ 
+-Uygulamanın şuanki sürümünde (v1.0) UI kısmı Spotify API bağlantısı yapıldıktan sonra açıldığından dolayı uygulamanın açılması uzun sürebilir 
+
 ## 🖥️ Kullanılan Teknolojiler
 - Python
 - Spotipy (Spotify API)
