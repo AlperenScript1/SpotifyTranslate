@@ -50,9 +50,8 @@ spotify = spotipy.Spotify(
 def checkApi():
     lyrics_text1.config(state="disabled") #! noWrite
     lyrics_Label1.config(bg="white")
-    # keep track of the last searched track so we don't repeat searches
     lastTrack = None
-    while True:
+    while True: #? Çalan şarkı aynı olduğu zaman tekrardan söz alımı yapılmıyor.
         try:
             current = spotify.current_playback()
             if current and current.get("is_playing"):
@@ -61,40 +60,44 @@ def checkApi():
                 track_Label1.config(text=f"{artist} - {firstTrack}")
                 print(artist + " " + firstTrack)
 
-                # only proceed if we have both artist and track
-                if artist is not None and firstTrack is not None:
-                    # if it's the same as the last searched track, skip
-                    if lastTrack == firstTrack:
+                
+                if artist and firstTrack != None: #artist is not None and firstTrack is not None
+                    if lastTrack == firstTrack: #? İsim Aynı ise atlanıyor
                         print("Aynı şarkı tekrar bulundu; arama atlandı.")
                     else:
                         lastTrack = firstTrack
                         print("==========================--=================================")
+                        lyrics_Label1.pack(pady=20)
                         lyrics_Label1.config(text="Şarkı sözleri alınıyor..")
-                        # azlyrics search
-                        searchEntry = driver.find_element(By.CLASS_NAME, "form-control")
+                        #? azlyrics search
+                        searchEntry = driver.find_element(By.CLASS_NAME, "form-control") # 
                         print("Selenium: search Class bulundu")
                         print(str(artist) + " " + str(lastTrack))
                         try:
-                            searchEntry.clear()
+                            searchEntry.clear() #? Önceden aratılanı temizliyor.
                         except Exception:
                             pass
                         searchEntry.send_keys(str(artist) + " " + str(lastTrack))
                         sleep(2)
-                        searchButton = driver.find_element(By.CSS_SELECTOR, "form[class='search'] button[type='submit']")
+                        searchButton = driver.find_element(By.CSS_SELECTOR, "form[class='navbar-form navbar-right search'] button[type='submit']")
                         sleep(2)
-                        foundTrack = driver.find_element(By.CLASS_NAME, "eac-item")
+                        foundTrack = driver.find_element(By.CLASS_NAME, "eac-item") 
                         print("foundTrack bulundu")
                         foundTrack.click()
                         lyrics = driver.find_element(By.XPATH, "//body/div[@class='container main-page']/div[@class='row']/div[@class='col-xs-12 col-lg-8 text-center']/div[5]").text
                         print(str(lyrics))
                         lyrics_text1.config(state="normal")
-                        lyrics_text1.delete("1.0", "end")
-                        lyrics_text1.insert("1.0", lyrics)
+                        lyrics_text1.delete("1.0", "end") #? Eski sözleri siliyor.
+                        lyrics_text1.insert("1.0", lyrics) #? Yeni sözleri ekliyor.
                         lyrics_text1.config(state="disabled")
+                        sleep(3)
+                        lyrics_Label1.pack_forget()
                 else:
                     print("Spotify bağlantısı kurulamadı..")
             else:
                 track_Label1.config(text="Çalmıyor")
+                lyrics_Label1.pack(pady=20)
+                lyrics_Label1.config(text="En son dinlenilen:" + str(artist) + " - " +  str(lastTrack));
         except Exception as e:
                lyrics_Label1.config(bg="red")
                lyrics_Label1.config(text="Şarkı sözleri alınamadı :(")
