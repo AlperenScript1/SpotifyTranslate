@@ -19,4 +19,4 @@ Bu proje, Spotify’da çalan şarkıları gerçek zamanlı olarak takip eden ve
 - Çekilen sözler otomatik olarak İngilizce’den Türkçe’ye çevrilir ve arayüzde görüntülenir.
 
 ## 📄 Durum
-Proje yayınlanmıştır stabilite iyileştirmeleri üzerinde çalışılmaktadır.
+Proje yayınlanmıştır stabilite iyileştirmeleri üzerinde çalışılmaktadır ve ilerleyen zamanlarda diğer dilleri desteklemesi planlanıyordur.
