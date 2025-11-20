@@ -8,6 +8,7 @@ Bu proje, Spotify’da çalan şarkıları gerçek zamanlı olarak takip eden ve
 - Python
 - Spotipy (Spotify API)
 - Selenium
+- azlyrics.com (lyrics sources)
 - Tkinter
 - argos-translate (offline çeviri)
 
@@ -18,6 +19,4 @@ Bu proje, Spotify’da çalan şarkıları gerçek zamanlı olarak takip eden ve
 - Çekilen sözler otomatik olarak İngilizce’den Türkçe’ye çevrilir ve arayüzde görüntülenir.
 
 ## 📄 Durum
-Proje hâlihazırda geliştirme aşamasında olup stabilite iyileştirmeleri üzerinde çalışılmaktadır.
-
-**Özet:** Spotify entegrasyonu + web otomasyonu + İngilizce’den Türkçe’ye offline/local çeviri üzerine canlı gelişen teknik bir demo. 🚀
+Proje yayınlanmıştır stabilite iyileştirmeleri üzerinde çalışılmaktadır.
