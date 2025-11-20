@@ -145,6 +145,5 @@ lyrics_scrollbar1 = tk.Scrollbar(content_frame, command=lyrics_text1.yview)
 lyrics_scrollbar1.pack(side="right", fill="y")
 lyrics_text1.config(yscrollcommand=lyrics_scrollbar1.set)
 
-# Threading: run API checker in background
 threading.Thread(target=checkApi, daemon=True).start()
 root.mainloop()
